@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import JsEditor from './components/JsEditor.vue'
 import JsPreview from './components/JsPreview.vue'
 import ToolBar from './components/ToolBar.vue'
@@ -13,9 +13,12 @@ function draw() {
   ellipse(mouseX, mouseY, 50, 50);
 }`)
 
+const contentArea = ref<HTMLElement | null>(null)
+const editorWidth = ref(50) // Percentage width of the editor
+const iframeKey = ref(crypto.randomUUID()) // To force iframe reloads
+const isDragging = ref(false)
 const isRunning = ref(false)
 const jsPreviewInstance = ref<InstanceType<typeof JsPreview> | null>(null)
-const iframeKey = ref(crypto.randomUUID()) // To force iframe reloads
 
 const runSketch = () => {
   const iframe = jsPreviewInstance.value?.$refs.iframe as HTMLIFrameElement
@@ -58,16 +61,55 @@ const stopSketch = () => {
   iframeKey.value = crypto.randomUUID()
   isRunning.value = false
 }
+
+const startResize = (e: MouseEvent) => {
+  isDragging.value = true
+  e.preventDefault()
+}
+
+const handleResize = (e: MouseEvent) => {
+  if (!isDragging.value || !contentArea.value) return
+
+  const rect = contentArea.value.getBoundingClientRect()
+  const offsetX = e.clientX - rect.left
+  const newWidth = (offsetX / rect.width) * 100
+
+  if (newWidth >= 20 && newWidth <= 80) {
+    // Set minimum and maximum widths (20% to 80%)
+    editorWidth.value = newWidth
+  }
+}
+
+const stopResize = () => {
+  isDragging.value = false
+}
+
+onMounted(() => {
+  window.addEventListener('mousemove', handleResize)
+  window.addEventListener('mouseup', stopResize)
+  window.addEventListener('mouseleave', stopResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('mousemove', handleResize)
+  window.removeEventListener('mouseup', stopResize)
+  window.removeEventListener('mouseleave', stopResize)
+})
 </script>
 
 <template>
   <div class="container">
     <ToolBar :is-running="isRunning" @run="runSketch" @stop="stopSketch" />
-    <div class="main-content">
-      <div class="editor-section">
+    <div ref="contentArea" class="main-content" :class="{ dragging: isDragging }">
+      <div
+        class="editor-section"
+        :style="{ width: editorWidth + '%' }"
+        :class="{ 'no-pointer-events': isDragging }"
+      >
         <JsEditor :code="code" @update:code="code = $event" />
       </div>
-      <div class="preview-section">
+      <div class="divider" :class="{ dragging: isDragging }" @mousedown="startResize"></div>
+      <div class="preview-section" :class="{ 'no-pointer-events': isDragging }">
         <JsPreview ref="jsPreviewInstance" :key="iframeKey" />
       </div>
     </div>
@@ -101,11 +143,17 @@ body,
   min-height: 0;
 }
 
+.main-content.dragging {
+  cursor: col-resize;
+  user-select: none;
+}
+
 .editor-section {
-  flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 0;
+  min-width: 20%;
+  max-width: 80%;
 }
 
 .preview-section {
@@ -113,5 +161,25 @@ body,
   display: flex;
   flex-direction: column;
   min-height: 0;
+}
+
+.divider {
+  width: 8px;
+  background-color: #ccc;
+  cursor: col-resize;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.divider:hover {
+  background-color: #999;
+}
+
+.divider.dragging {
+  background-color: #666;
+}
+
+.no-pointer-events {
+  pointer-events: none;
 }
 </style>
