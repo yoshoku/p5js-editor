@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import JsEditor from './components/JsEditor.vue'
+import ToolBar from './components/ToolBar.vue'
 
 const code = ref(`function setup() {
   createCanvas(400, 400);
@@ -10,10 +11,20 @@ function draw() {
   background(220);
   ellipse(mouseX, mouseY, 50, 50);
 }`)
+
+const isRunning = ref(false)
+
+const runSketch = () => {
+  isRunning.value = true
+}
+const stopSketch = () => {
+  isRunning.value = false
+}
 </script>
 
 <template>
   <div class="container">
+    <ToolBar :is-running="isRunning" @run="runSketch" @stop="stopSketch" />
     <div class="editor-section">
       <JsEditor :code="code" />
     </div>
