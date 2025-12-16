@@ -20,6 +20,18 @@ const isDragging = ref(false)
 const isRunning = ref(false)
 const jsPreviewInstance = ref<InstanceType<typeof JsPreview> | null>(null)
 
+const extractPluginUrls = (code: string): string[] => {
+  const pluginRegex = /\/\/\s*@plugin\s+(https?:\/\/[^\s]+)/g
+  const urls: string[] = []
+  let match
+
+  while ((match = pluginRegex.exec(code)) !== null) {
+    urls.push(match[1])
+  }
+
+  return urls
+}
+
 const runSketch = () => {
   const iframe = jsPreviewInstance.value?.$refs.iframe as HTMLIFrameElement
   if (!iframe) return
@@ -28,6 +40,9 @@ const runSketch = () => {
   if (!contentDocument) return
 
   /* eslint-disable no-useless-escape */
+  const pluginUrls = extractPluginUrls(code.value)
+  const pluginScripts = pluginUrls.map(url => `<script src="${url}"><\/script>`).join('\n')
+
   const html = `
     <!DOCTYPE html>
     <html lang="en">
@@ -42,6 +57,7 @@ const runSketch = () => {
         canvas { display: block; }
       </style>
       <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"><\/script>
+      ${pluginScripts}
     </head>
     <body>
       <script>${code.value}<\/script>
