@@ -1,5 +1,29 @@
-# Vue 3 + TypeScript + Vite
+# Tiny p5.js Online Editor
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Tiny p5.js Online Editor is a simple online editor for programming education using p5.js.
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## Development
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Build for production:
+
+```bash
+npm run build
+```
+
+The build output will be saved to the `dist` directory.
+
+## License
+
+The program is available as open source under the terms of the [MIT License](https://github.com/yoshoku/p5js-editor/blob/main/LICENSE.txt)
