@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { shallowRef } from 'vue'
-import { VueMonacoEditor } from '@guolao/vue-monaco-editor'
-import type * as Monaco from 'monaco-editor'
+import { Codemirror } from 'vue-codemirror'
+import { javascript } from '@codemirror/lang-javascript'
 
 interface Props {
   code: string
@@ -13,27 +12,18 @@ const emit = defineEmits<{
   'update:code': [value: string]
 }>()
 
-const editor = shallowRef<Monaco.editor.IStandaloneCodeEditor | null>(null)
-const handleMount = (editorInstance: Monaco.editor.IStandaloneCodeEditor) => {
-  editor.value = editorInstance
-}
+const extensions = [javascript()]
 </script>
 
 <template>
   <div class="js-editor-wrapper">
-    <vue-monaco-editor
-      :value="code"
-      language="javascript"
-      theme="vs-light"
-      :options="{
-        automaticLayout: true,
-        formatOnType: true,
-        formatOnPaste: true,
-        links: false,
-        minimap: { enabled: false },
-      }"
-      @update:value="emit('update:code', $event)"
-      @mount="handleMount"
+    <Codemirror
+      :model-value="code"
+      :extensions="extensions"
+      :autofocus="true"
+      :indent-with-tab="true"
+      :tab-size="2"
+      @update:model-value="emit('update:code', $event)"
     />
   </div>
 </template>
@@ -42,5 +32,18 @@ const handleMount = (editorInstance: Monaco.editor.IStandaloneCodeEditor) => {
 .js-editor-wrapper {
   flex: 1 1 0;
   overflow: hidden;
+}
+
+.js-editor-wrapper :deep(.cm-editor) {
+  height: 100%;
+  font-size: 12pt;
+}
+
+.js-editor-wrapper :deep(.cm-scroller) {
+  overflow: auto;
+}
+
+.js-editor-wrapper :deep(.cm-content) {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
 }
 </style>
