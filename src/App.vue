@@ -62,6 +62,18 @@ const stopSketch = () => {
   isRunning.value = false
 }
 
+const downloadSketch = () => {
+  const blob = new Blob([code.value], { type: 'text/javascript' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'sketch.js'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+}
+
 const startResize = (e: MouseEvent) => {
   isDragging.value = true
   e.preventDefault()
@@ -74,8 +86,8 @@ const handleResize = (e: MouseEvent) => {
   const offsetX = e.clientX - rect.left
   const newWidth = (offsetX / rect.width) * 100
 
+  // Set minimum and maximum widths (20% to 80%)
   if (newWidth >= 20 && newWidth <= 80) {
-    // Set minimum and maximum widths (20% to 80%)
     editorWidth.value = newWidth
   }
 }
@@ -99,7 +111,12 @@ onUnmounted(() => {
 
 <template>
   <div class="container">
-    <ToolBar :is-running="isRunning" @run="runSketch" @stop="stopSketch" />
+    <ToolBar
+      :is-running="isRunning"
+      @run="runSketch"
+      @stop="stopSketch"
+      @download="downloadSketch"
+    />
     <div ref="contentArea" class="main-content" :class="{ dragging: isDragging }">
       <div
         class="editor-section"
