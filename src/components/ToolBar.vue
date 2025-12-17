@@ -10,6 +10,7 @@ defineProps<Props>()
 const emit = defineEmits<{
   run: []
   stop: []
+  fullscreen: []
   download: []
   upload: [file: File]
 }>()
@@ -49,6 +50,28 @@ const triggerUpload = () => {
         fill="currentColor"
       >
         <path d="M8 5v14l11-7z" />
+      </svg>
+    </button>
+    <button
+      class="icon-button fullscreen-button"
+      :disabled="isRunning"
+      data-tooltip="Run in fullscreen"
+      @click="emit('fullscreen')"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"
+        />
       </svg>
     </button>
     <button
@@ -173,14 +196,20 @@ const triggerUpload = () => {
 }
 
 .run-button:disabled {
-  background-color: #008dfb;
-  color: white;
+  background-color: #e0e0e0;
+  color: #999;
   cursor: not-allowed;
 }
 
 .stop-button:disabled {
-  background-color: #008dfb;
-  color: white;
+  background-color: #e0e0e0;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.fullscreen-button:disabled {
+  background-color: #e0e0e0;
+  color: #999;
   cursor: not-allowed;
 }
 

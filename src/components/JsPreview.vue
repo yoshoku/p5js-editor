@@ -2,14 +2,16 @@
 import { ref } from 'vue'
 
 const iframe = ref<HTMLIFrameElement | null>(null)
+const wrapper = ref<HTMLDivElement | null>(null)
 
 defineExpose({
   iframe,
+  wrapper,
 })
 </script>
 
 <template>
-  <div class="js-preview-wrapper">
+  <div ref="wrapper" class="js-preview-wrapper">
     <iframe ref="iframe" class="js-preview-iframe"></iframe>
   </div>
 </template>

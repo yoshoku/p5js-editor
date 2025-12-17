@@ -40,7 +40,7 @@ const extractPluginUrls = (code: string): string[] => {
 }
 
 const runSketch = () => {
-  const iframe = jsPreviewInstance.value?.$refs.iframe as HTMLIFrameElement
+  const iframe = jsPreviewInstance.value?.iframe as HTMLIFrameElement
   if (!iframe) return
 
   const contentDocument = iframe.contentDocument || iframe.contentWindow?.document
@@ -78,6 +78,16 @@ const runSketch = () => {
   contentDocument.close()
 
   isRunning.value = true
+}
+
+const runSketchFullscreen = async () => {
+  const wrapper = jsPreviewInstance.value?.wrapper
+  if (!wrapper) return
+
+  if (wrapper.requestFullscreen) {
+    await wrapper.requestFullscreen()
+    setTimeout(() => runSketch(), 100)
+  }
 }
 
 const stopSketch = () => {
@@ -161,6 +171,7 @@ onUnmounted(() => {
     <ToolBar
       :is-running="isRunning"
       @run="runSketch"
+      @fullscreen="runSketchFullscreen"
       @stop="stopSketch"
       @upload="uploadSketch"
       @download="downloadSketch"
