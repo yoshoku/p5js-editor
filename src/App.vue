@@ -25,6 +25,12 @@ const isDragging = ref(false)
 const isRunning = ref(false)
 const jsPreviewInstance = ref<InstanceType<typeof JsPreview> | null>(null)
 
+const extractBackgroundColor = (code: string): string | null => {
+  const bgRegex = /\/\/\s*@background\s+([#a-zA-Z0-9() ,]+)/i
+  const match = code.match(bgRegex)
+  return match ? match[1] : null
+}
+
 const extractPluginUrls = (code: string): string[] => {
   const pluginRegex = /\/\/\s*@plugin\s+(https?:\/\/[^\s]+)/g
   const urls: string[] = []
@@ -72,6 +78,9 @@ const runSketch = () => {
     </html>
   `
   /* eslint-enable no-useless-escape */
+
+  const bgColor = extractBackgroundColor(code.value)
+  if (bgColor) iframe.style.backgroundColor = bgColor
 
   contentDocument.open()
   contentDocument.write(html)
