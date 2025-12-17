@@ -34,6 +34,5 @@ const handleMount = (editorInstance: Monaco.editor.IStandaloneCodeEditor) => {
 <style scoped>
 .js-editor-wrapper {
   flex: 1 1 0;
-  overflow: hidden;
 }
 </style>
