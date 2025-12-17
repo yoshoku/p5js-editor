@@ -32,6 +32,10 @@ const handleFileChange = (e: Event) => {
 const triggerUpload = () => {
   fileInput.value?.click()
 }
+
+const openAbout = () => {
+  window.open('https://github.com/yoshoku/tiny-p5js-editor', '_blank')
+}
 </script>
 
 <template>
@@ -129,6 +133,24 @@ const triggerUpload = () => {
         <line x1="12" y1="15" x2="12" y2="3" />
       </svg>
     </button>
+    <button class="icon-button about-button" data-tooltip="About" @click="openAbout">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line x1="12" y1="18" x2="12" y2="12" />
+        <line x1="10" y1="11" x2="12" y2="11" />
+        <line x1="12" y1="19" x2="14" y2="19" />
+        <line x1="12" y1="5" x2="12.01" y2="5" />
+      </svg>
+    </button>
     <input
       ref="fileInput"
       type="file"
@@ -146,7 +168,6 @@ const triggerUpload = () => {
   padding: 8px;
   background-color: #f0f0f0;
   border-bottom: 1px solid #ccc;
-  width: 100%;
 }
 
 .icon-button {
@@ -218,5 +239,10 @@ const triggerUpload = () => {
   background-color: #666;
   margin: 0 8px 0 0;
   align-self: stretch;
+}
+
+.about-button {
+  margin-left: auto;
+  margin-right: 0;
 }
 </style>
