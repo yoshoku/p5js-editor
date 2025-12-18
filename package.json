@@ -12,8 +12,7 @@
     "format": "prettier --write \"src/**/*.{js,ts,vue,json,css,scss,md}\"",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:browser": "vitest --browser.enabled --browser.name=chromium --browser.headless",
-    "test:coverage": "vitest --coverage"
+    "test:browser": "vitest --config vitest.browser.config.ts --run"
   },
   "dependencies": {
     "@guolao/vue-monaco-editor": "^1.6.0",
