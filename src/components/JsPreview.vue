@@ -12,7 +12,7 @@ defineExpose({
 
 <template>
   <div ref="wrapper" class="js-preview-wrapper">
-    <iframe ref="iframe" class="js-preview-iframe"></iframe>
+    <iframe ref="iframe" class="js-preview-iframe" sandbox="allow-scripts allow-forms"></iframe>
   </div>
 </template>
 

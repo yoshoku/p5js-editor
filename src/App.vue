@@ -26,9 +26,6 @@ const runSketch = () => {
   const iframe = jsPreviewInstance.value?.iframe as HTMLIFrameElement
   if (!iframe) return
 
-  const contentDocument = iframe.contentDocument || iframe.contentWindow?.document
-  if (!contentDocument) return
-
   /* eslint-disable no-useless-escape */
   const pluginUrls = extractPluginUrls(code.value)
   const pluginScripts = pluginUrls.map(url => `<script src="${url}"><\/script>`).join('\n')
@@ -59,9 +56,7 @@ const runSketch = () => {
   const bgColor = extractBackgroundColor(code.value)
   if (bgColor) iframe.style.backgroundColor = bgColor
 
-  contentDocument.open()
-  contentDocument.write(html)
-  contentDocument.close()
+  iframe.srcdoc = html
 
   isRunning.value = true
 }
