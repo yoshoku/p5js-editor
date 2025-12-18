@@ -1,5 +1,6 @@
 import js from '@eslint/js'
 import pluginVue from 'eslint-plugin-vue'
+import pluginVitest from 'eslint-plugin-vitest'
 import tseslint from 'typescript-eslint'
 import vueParser from 'vue-eslint-parser'
 import prettierConfig from '@vue/eslint-config-prettier'
@@ -43,6 +44,22 @@ export default [
     languageOptions: {
       globals: {
         ...globals.node,
+      },
+    },
+  },
+
+  {
+    files: ['tests/**/*.test.ts'],
+    plugins: {
+      vitest: pluginVitest,
+    },
+    rules: {
+      ...pluginVitest.configs.recommended.rules,
+    },
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...pluginVitest.environments.env.globals,
       },
     },
   },
