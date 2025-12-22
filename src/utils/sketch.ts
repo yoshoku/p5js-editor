@@ -1,3 +1,5 @@
+const ALLOWED_CDN_DOMAINS = ['cdn.jsdelivr.net', 'unpkg.com', 'cdnjs.cloudflare.com'] as const
+
 export const extractBackgroundColor = (code: string): string | null => {
   const bgRegex = /\/\/\s*@background\s+([#a-zA-Z0-9() ,]+)/
   const match = code.match(bgRegex)
@@ -16,6 +18,15 @@ export const extractPluginUrls = (code: string): string[] => {
   }
 
   return urls
+}
+
+export const isValidPluginUrl = (url: string): boolean => {
+  try {
+    const urlObj = new URL(url)
+    return ALLOWED_CDN_DOMAINS.some(domain => urlObj.hostname === domain)
+  } catch {
+    return false
+  }
 }
 
 export const escapeHtml = (str: string): string => {

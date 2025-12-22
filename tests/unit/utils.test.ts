@@ -4,6 +4,7 @@ import {
   extractPluginUrls,
   escapeHtml,
   generateId,
+  isValidPluginUrl,
 } from '../../src/utils/sketch'
 
 describe('extractBackgroundColor', () => {
@@ -78,6 +79,28 @@ describe('extractPluginUrls', () => {
       'https://cdn.example.com/valid.js',
       'https://another.com/plugin.js',
     ])
+  })
+})
+
+describe('isValidPluginUrl', () => {
+  it('should return true for valid URLs', () => {
+    expect(
+      [
+        'https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js',
+        'https://unpkg.com/p5@1.11.11/lib/p5.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.10/p5.min.js',
+      ].every(isValidPluginUrl)
+    ).toBe(true)
+  })
+
+  it('should return false for invalid URLs', () => {
+    expect(
+      [
+        'http://example.com/plugin.js',
+        'ftp://cdn.example.com/plugin.js',
+        'https://malicious.com/evil.js',
+      ].some(isValidPluginUrl)
+    ).toBe(false)
   })
 })
 

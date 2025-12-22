@@ -8,6 +8,7 @@ import {
   extractPluginUrls,
   escapeHtml,
   generateId,
+  isValidPluginUrl,
 } from './utils/sketch'
 
 let initialCode = `function setup() {
@@ -32,7 +33,13 @@ const runSketch = () => {
   if (!iframe) return
 
   /* eslint-disable no-useless-escape */
-  const pluginUrls = extractPluginUrls(code.value)
+  const pluginUrls = extractPluginUrls(code.value).filter(url => {
+    const valid = isValidPluginUrl(url)
+    if (!valid) {
+      console.error(`Invalid plugin URL (not allowed CDN): ${url}`)
+    }
+    return valid
+  })
   const pluginScripts = pluginUrls
     .map(url => `<script src="${escapeHtml(url)}"><\/script>`)
     .join('\n')
